@@ -50,11 +50,15 @@ func responseJson(w http.ResponseWriter, code int, response interface{}) {
 	w.Write(body)
 }
 
+var regexpA = regexp.MustCompile(`<a[^>]*>(.*?)</a>`)
+
 func FuzzySearchHTML(targetStr string, html string, config *Config) (*Result, error) {
 	if config == nil {
 		config = &Config{}
 	}
 
+	//Fix links, because html2text represent it in starnge manear
+	html = regexpA.ReplaceAllString(html, "$1")
 	//Transform html to plain with "github.com/k3a/html2text"
 	text := html2text.HTML2Text(html)
 
