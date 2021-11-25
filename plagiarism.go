@@ -79,10 +79,10 @@ func FuzzySearchHTML(targetStr string, html string, config *Config) (*Result, er
 
 	//Create regexp for searching surround context of founded string
 	//variant that can break words around search (example strings like "Skill:Brand" can produce ":Brand")
-	//(?m)((?:[^\s+]+(?:\s+)){0,%d})%s(?:\s+)?((?:[^\s+]+(?:\s+)?){0,%d})
+	//(?m)((?:[^\s+]+(?:\s*)){0,%d})%s(?:\s+)?((?:[^\s+]+(?:\s+)?){0,%d})
 	//variant that return first word only after space char
 	//(?m)((?:[^\s+]+(?:\s+)){0,%d})(?:[^\s]+)?%s(?:[^\s]+)?(?:\s+)?((?:[^\s+]+(?:\s+)?){0,%d})
-	pattern := fmt.Sprintf(`(?m)((?:[^\s+]+(?:\s+)){0,%d})(?:[^\s]+)?%s(?:[^\s]+)?(?:\s+)?((?:[^\s+]+(?:\s+)?){0,%d})`, config.CountBefore, regexp.QuoteMeta(result.Found), config.CountAfter)
+	pattern := fmt.Sprintf(`(?m)((?:[^\s+]+(?:\s*)){0,%d})%s(?:\s+)?((?:[^\s+]+(?:\s+)?){0,%d})`, config.CountBefore, regexp.QuoteMeta(result.Found), config.CountAfter)
 	re, err := regexp.Compile(pattern)
 	if err != nil {
 		return result, err
