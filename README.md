@@ -6,6 +6,10 @@ Returns JSON response with result or errors.
 
 __If target string can't be founded in text - return response with enmpty foundText value__
 
+    go mod tidy
+    go run plagiarism.go
+
+
 Default endpoint address: http://localhost:8080/api/search
 
 Available REQUEST params (GET and POST both supported):
