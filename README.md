@@ -4,7 +4,7 @@ API endpoint to verify target URL has occurrence of passed phrase using fuzzy ma
 
 Returns JSON response with result or errors.
 
-__If target string can't be founded in text - return response with enmpty foundText value__
+__If target string can't be founded in text - return response with empty foundText value__
 
     go mod tidy
     go run plagiarism.go
