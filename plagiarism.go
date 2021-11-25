@@ -167,7 +167,7 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				innerErrorText = err.Error()
 			}
-			responseJson(w, 404, customError{Error: "Not found", InnerError: innerErrorText})
+			responseJson(w, resp.StatusCode, customError{Error: "Request error", InnerError: innerErrorText})
 			return
 		}
 	}
@@ -181,6 +181,10 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	result, err := FuzzySearchHTML(config.Search, string(body), &config)
 	if err != nil {
 		responseJson(w, 500, customError{Error: "Error in parsing response", InnerError: err.Error()})
+		return
+	}
+	if result.Found == "" {
+		responseJson(w, 422, customError{Error: "String not found in target resource"})
 		return
 	}
 	result.URL = config.URL
