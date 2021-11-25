@@ -218,7 +218,7 @@ Loop:
 		first = 0
 	Outer:
 		for _, r1 := range source {
-			if r1 == ' ' {
+			if r1 == ' ' || r1 == '\t' || r1 == '\n' || r1 == '\r' {
 				continue
 			}
 			skipped := 0
