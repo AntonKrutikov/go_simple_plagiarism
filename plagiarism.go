@@ -108,8 +108,8 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 		FuzzyDistance: 20,
 		CountBefore:   0,
 		CountAfter:    0,
-		ProxyURL:      "http://api.scraperapi.com/",
-		ProxyAPIKEY:   "SECRETKEY",
+		ProxyURL:      "http://api.scrape.do",
+		ProxyAPIKEY:   "",
 	}
 
 	r.ParseForm()
@@ -138,6 +138,12 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//Optional: count of words after result
+	if r.Form.Get("api_key") != "" {
+		apiKEY := r.Form.Get("api_key")
+		config.ProxyAPIKEY = apiKEY
+	}
+
 	//Check required params
 	if config.URL == "" || config.Search == "" {
 		responseJson(w, 400, customError{Error: "Missing required parameters"})
@@ -154,10 +160,14 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	resp, err := http.Get(config.URL)
 	if err != nil || resp.StatusCode != 200 {
 		//Fallback proxy api
-		proxyURL := fmt.Sprintf("%s?api_key=%s&url=%s", config.ProxyURL, config.ProxyAPIKEY, config.URL)
+		proxyURL := fmt.Sprintf("%s?token=%s&url=%s", config.ProxyURL, config.ProxyAPIKEY, config.URL)
 		resp, err = http.Get(proxyURL)
 		if err != nil || resp.StatusCode != 200 {
-			responseJson(w, 404, customError{Error: "Not found", InnerError: err.Error()})
+			innerErrorText := ""
+			if err != nil {
+				innerErrorText = err.Error()
+			}
+			responseJson(w, 404, customError{Error: "Not found", InnerError: innerErrorText})
 			return
 		}
 	}
